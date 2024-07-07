@@ -90,8 +90,8 @@ module "eks" {
      # max_capacity     = 2
       #min_capacity     = 1
      # instance_type = "t3.medium"
-    }
-  }
+   # }
+  #}
 }
 
 # Deploy Django on EKS
