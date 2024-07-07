@@ -39,7 +39,7 @@ resource "aws_instance" "mongodb" {
     connection {
       type        = "ssh"
       user        = "ubuntu"
-      private_key = file("~/.ssh/id_rsa")
+      private_key = file("~/Downloads/devopskeypair.pem")
       host        = self.public_ip
     }
   }
