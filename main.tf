@@ -46,19 +46,30 @@ resource "aws_instance" "mongodb" {
 }
 
 # S3 Bucket for MongoDB Backups
+#resource "aws_s3_bucket" "mongodb_backup" {
+#  bucket = "mongodb-backup-bucket-${random_string.suffix.result}"
+ # acl    = "public-read"
+
+  #tags = {
+   # Name = "MongoDB Backup Bucket"
+  #}
+#}
+
+#resource "random_string" "suffix" {
+ # length  = 8
+  #special = false
+#}
+
 resource "aws_s3_bucket" "mongodb_backup" {
-  bucket = "mongodb-backup-bucket-${random_string.suffix.result}"
+  bucket = "django-backup"
+  # Other configurations
+}
+
+resource "aws_s3_bucket_acl" "mongodb_backup_acl" {
+  bucket = aws_s3_bucket.mongodb_backup.id
   acl    = "public-read"
-
-  tags = {
-    Name = "MongoDB Backup Bucket"
-  }
 }
 
-resource "random_string" "suffix" {
-  length  = 8
-  special = false
-}
 
 # VPC Configuration
 module "vpc" {
