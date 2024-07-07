@@ -65,7 +65,7 @@ module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "2.78.0"
 
-  name = "example-vpc"
+  name = "django-project-vpc"
   cidr = "10.0.0.0/16"
 
   azs             = ["us-east-1a", "us-east-1b", "us-east-1c"]
@@ -79,18 +79,17 @@ module "vpc" {
 # EKS Cluster Configuration
 module "eks" {
   source          = "terraform-aws-modules/eks/aws"
-  cluster_name    = "example-cluster"
+  cluster_name    = "django-eks-cluster"
   cluster_version = "1.21"
-  subnets         = module.vpc.private_subnets
+ # subnets         = module.vpc.private_subnets
   vpc_id          = module.vpc.vpc_id
 
-  node_groups = {
-    eks_nodes = {
-      desired_capacity = 2
-      max_capacity     = 2
-      min_capacity     = 1
-
-      instance_type = "t3.medium"
+  #node_groups = {
+   # eks_nodes = {
+    #  desired_capacity = 2
+     # max_capacity     = 2
+      #min_capacity     = 1
+     # instance_type = "t3.medium"
     }
   }
 }
@@ -109,7 +108,7 @@ resource "kubernetes_deployment" "django" {
     replicas = 1
 
     selector {
-      match_labels = {
+    match_labels = {
         app = "django"
       }
     }
