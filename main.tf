@@ -95,13 +95,13 @@ module "eks" {
   }
 }
 
-# Deploy WordPress on EKS
-resource "kubernetes_deployment" "wordpress" {
+# Deploy Django on EKS
+resource "kubernetes_deployment" "django" {
   metadata {
-    name      = "wordpress"
+    name      = "django"
     namespace = "default"
     labels = {
-      app = "wordpress"
+      app = "django"
     }
   }
 
@@ -110,38 +110,38 @@ resource "kubernetes_deployment" "wordpress" {
 
     selector {
       match_labels = {
-        app = "wordpress"
+        app = "django"
       }
     }
 
     template {
       metadata {
         labels = {
-          app = "wordpress"
+          app = "django"
         }
       }
 
       spec {
         container {
-          name  = "wordpress"
-          image = "wordpress:latest"
+          name  = "django"
+          image = "django:latest"  # Replace with the actual Docker image for your Django app
 
           ports {
-            container_port = 80
+            container_port = 8000
           }
 
           env {
-            name  = "WORDPRESS_DB_HOST"
+            name  = "DJANGO_DB_HOST"
             value = "mongodb.${aws_instance.mongodb.private_ip}"
           }
 
           env {
-            name  = "WORDPRESS_DB_USER"
+            name  = "DJANGO_DB_USER"
             value = "root"
           }
 
           env {
-            name  = "WORDPRESS_DB_PASSWORD"
+            name  = "DJANGO_DB_PASSWORD"
             value = "rootpassword"
           }
         }
@@ -150,20 +150,20 @@ resource "kubernetes_deployment" "wordpress" {
   }
 }
 
-resource "kubernetes_service" "wordpress" {
+resource "kubernetes_service" "django" {
   metadata {
-    name      = "wordpress"
+    name      = "django"
     namespace = "default"
   }
 
   spec {
     selector = {
-      app = "wordpress"
+      app = "django"
     }
 
     port {
       port        = 80
-      target_port = 80
+      target_port = 8000
     }
 
     type = "LoadBalancer"
@@ -179,6 +179,6 @@ output "s3_bucket_name" {
   value = aws_s3_bucket.mongodb_backup.bucket
 }
 
-output "wordpress_url" {
-  value = kubernetes_service.wordpress.status.load_balancer[0].ingress[0].hostname
+output "django_url" {
+  value = kubernetes_service.django.status.load_balancer[0].ingress[0].hostname
 }
