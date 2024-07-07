@@ -125,7 +125,7 @@ resource "kubernetes_deployment" "django" {
           name  = "django"
           image = "django:latest"  # Replace with the actual Docker image for your Django app
 
-          ports {
+          port {
             container_port = 8000
           }
 
@@ -178,6 +178,6 @@ output "s3_bucket_name" {
   value = aws_s3_bucket.mongodb_backup.bucket
 }
 
-output "django_url" {
-  value = kubernetes_service.django.status.load_balancer[0].ingress[0].hostname
-}
+#output "django_url" {
+#  value = kubernetes_service.django.status.load_balancer[0].ingress[0].hostname
+#}
